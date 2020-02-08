@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import * as fetchImages from '../actions/fetchPage';
+import {fetchImages} from '../actions/fetchPage';
 export class MainScreen extends React.Component {
   constructor(props) {
     super(props);
