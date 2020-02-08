@@ -1,12 +1,14 @@
-import React, { Component } from 'react';
-import { Text, View } from 'react-native';
+import React, {Component} from 'react';
+import { AppRegistry } from 'react-native';
+import { StackNavigator } from 'react-navigation';
 
-export default class HelloWorldApp extends Component {
-  render() {
-    return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>Hello, world!</Text>
-      </View>
-    );
-  }
-}
+import MainScreen from './screens/mainScreen';
+import PhotoScreen from './screens/photoScreen';
+
+
+const App = StackNavigator({
+  Home: { screen: MainScreen },
+  Photo: { screen: PhotoScreen },
+});
+
+export default App;
