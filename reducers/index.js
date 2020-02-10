@@ -16,12 +16,11 @@ export function imagesReducer(state = initialState, action) {
                 isFetching: true
             }
         case FETCH_IMAGES_SUCCESS:
-            console.log(action.data);
             return {
                 ...state,
                 isFetching: false,
-                images: action.data.images,
-                page:action.page.page
+                images: state.images.concat(action.data.images),
+                page:action.data.page
             }
         case FETCH_IMAGES_FAILURE:
             return {

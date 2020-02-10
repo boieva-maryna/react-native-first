@@ -34,6 +34,12 @@ target 'FirstProject' do
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
 
+  pod 'react-native-safe-area-context', :path => '../node_modules/react-native-safe-area-context'
+
+  pod 'RNCMaskedView', :path => '../node_modules/@react-native-community/masked-view'
+
+  pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
+
   target 'FirstProjectTests' do
     inherit! :search_paths
     # Pods for testing

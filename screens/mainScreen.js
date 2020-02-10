@@ -15,12 +15,6 @@ import {fetchImages} from '../actions/fetchPage';
 export class MainScreen extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-        page: 1,
-        images: [],
-        isFetching: true,
-        error: false
-      };
   }
   static navigationOptions = {
     title: 'Images List',
@@ -40,7 +34,7 @@ export class MainScreen extends React.Component {
   };
 
   renderFooter = () => {
-    if (!this.state.isFetching) return null;
+    if (!this.props.isFetching) return null;
 
     return (
       <View
@@ -56,30 +50,15 @@ export class MainScreen extends React.Component {
   };
 
   handleLoadMore = () =>{
-    this.setState(
-      {
-        page: this.state.page + 1
-      },
-      () => {
-        this.props.fetchImages();
-      }
-    );
-  };
-
-  handleRefresh = () => {
-    this.setState(
-      {
-        page: 1,
-        isFetching: true
-      },
-      () => {
-        this.props.fetchImages();
-      }
-    );
+    console.log(this.props.images.length);
+    if(this.props.isFetching) return;
+    let {page} =this.props;
+    this.props.fetchImagesDispatch(page+1);
   };
 
   componentDidMount() {
-    this.props.fetchImages();
+    const {page} =this.props;
+    this.props.fetchImagesDispatch(page);
   }
 
   renderFlatListItem(item) {
@@ -90,7 +69,7 @@ export class MainScreen extends React.Component {
           source={{uri: item.urls.small}} style={styles.photo}
         />
         <View style={{alignItems: 'flex-start', marginBottom: 10, marginLeft: 10}}>
-          <Text style={styles.photoName}>{item.alt_description}</Text>
+          <Text style={styles.photoName}>{item.description!==null?item.description:item.alt_description}</Text>
           <Text style={styles.userName}>{item.user.username}</Text>
         </View>
       </TouchableOpacity>
@@ -99,19 +78,17 @@ export class MainScreen extends React.Component {
   }
 
   render() {
-    
     return (
       <View>
         <FlatList style = {{backgroundColor: '#fff'}}
-          data={this.state.photos}
-          keyExtractor={(item) => item.id}
+          data={this.props.images}
+          keyExtractor={(item) => item.id+this.props.page}
           renderItem={({item}) => this.renderFlatListItem(item)}
           ItemSeparatorComponent={this.renderSeparator}
           ListFooterComponent={this.renderFooter}
-          onRefresh={this.handleRefresh}
-          refreshing={this.state.refreshing}
           onEndReached={this.handleLoadMore}
-          onEndReachedThreshold={50}
+          onEndReachedThreshold={0.01}
+          initialNumToRender={10}
         />
       </View>
     );
@@ -143,18 +120,16 @@ const styles = StyleSheet.create({
     color: 'rgba(0,0,0,.4)',
   }
 });
-function mapStateToProps(state) {
-    return {
-        images: state.images,
-        page:state.page,
-        isFetching:state.isFetching,
-        error:state.error
-    }
-}
+const mapStateToProps=(state) =>({
+    images:state.imagesReducer.images,
+    isFetching: state.imagesReducer.isFetching,
+    error: state.imagesReducer.error,
+    page:state.imagesReducer.page
+})
 
 function mapDispatchToProps(dispatch) {
     return {
-        ...bindActionCreators({ fetchImages }, dispatch)
+        fetchImagesDispatch:(page)=>dispatch(fetchImages(page))
     }
 }
 
